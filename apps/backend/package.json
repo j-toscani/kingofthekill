@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "lint": "eslint --ext .ts .",
     "dev": "node --watch --loader ts-node/esm --experimental-specifier-resolution node server.ts"
   },
   "keywords": [],
@@ -12,6 +13,8 @@
   "license": "ISC",
   "devDependencies": {
     "@types/ws": "^8.5.5",
+    "@typescript-eslint/eslint-plugin": "^5.61.0",
+    "@typescript-eslint/parser": "^5.61.0",
     "eslint": "8.44.0",
     "eslint-config-prettier": "^8.8.0",
     "nodemon": "^2.0.22",

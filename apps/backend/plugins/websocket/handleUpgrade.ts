@@ -1,4 +1,3 @@
-import { FastifyInstance } from 'fastify';
 import { WebSocketServer } from 'ws';
 import { IncomingMessage } from 'http';
 import { Socket } from 'net';

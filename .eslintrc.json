@@ -1,3 +1,38 @@
 {
-    "extends": ["eslint:recommended", "prettier"] 
+	"reportUnusedDisableDirectives": true,
+	"extends": ["eslint:recommended", "prettier"],
+	"rules": {
+		"eqeqeq": 2,
+		"no-unused-vars": [2, { "varsIgnorePattern": "_", "argsIgnorePattern": "_" }],
+		"no-constant-binary-expression": 2,
+		"no-duplicate-imports": 2,
+		"no-self-compare": 1,
+		"camelcase": 2,
+		"consistent-return": 1,
+		"default-case": 2,
+		"default-case-last": 2,
+		"default-param-last": 2,
+		"no-alert": 2,
+		"no-console": 1,
+		"no-lonely-if": 2,
+		"no-magic-numbers": 1,
+		"no-param-reassign": 2,
+		"no-return-await": 1,
+		"no-var": 2,
+		"object-shorthand": [1, "always"],
+		"prefer-arrow-callback": 2,
+		"prefer-rest-params": 2,
+		"radix": 1,
+		"require-await": 2,
+		"prefer-destructuring": [
+			1,
+			{
+				"array": true,
+				"object": true
+			},
+			{
+				"enforceForRenamedProperties": true
+			}
+		]
+	}
 }

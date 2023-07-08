@@ -1,3 +1,13 @@
 {
-  "extends": ["../../.eslintrc.json"]
+	"env": {
+		"node": true,
+		"es2023": true
+	},
+	"parser": "@typescript-eslint/parser",
+	"plugins": ["@typescript-eslint"],
+	"extends": ["../../.eslintrc.json"],
+	"rules": {
+		"no-unused-vars": "off",
+		"@typescript-eslint/no-unused-vars": [1, { "varsIgnorePattern": "_", "argsIgnorePattern": "_" }]
+	  }
 }

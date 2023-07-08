@@ -3,5 +3,5 @@
         {"path": "apps/backend"},
         {"path": "apps/frontend"},
         {"path": "apps/shared"}
-    ] 
+    ] ,
 }
