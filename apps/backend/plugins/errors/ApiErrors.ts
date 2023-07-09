@@ -1,3 +1,5 @@
+import { API_RESPONSE_CODE } from '../../constants.js';
+
 export abstract class ApiError extends Error {
 	statusCode: number;
 
@@ -15,24 +17,24 @@ export abstract class ApiError extends Error {
 
 export class BadRequestError extends ApiError {
 	constructor(message: string) {
-		super('BadRequest', 400, message);
+		super('BadRequest', API_RESPONSE_CODE.BAD_REQUEST, message);
 	}
 }
 
 export class UnauthorizedError extends ApiError {
 	constructor(message: string) {
-		super('Unauthorized', 401, message);
+		super('Unauthorized', API_RESPONSE_CODE.UNAUTHORIZED, message);
 	}
 }
 
 export class NotFoundError extends ApiError {
 	constructor(message: string) {
-		super('NotFound', 404, message);
+		super('NotFound', API_RESPONSE_CODE.NOT_FOUND, message);
 	}
 }
 
 export class InternalServerError extends ApiError {
 	constructor(message: string) {
-		super('InternalServerError', 500, message);
+		super('InternalServerError', API_RESPONSE_CODE.INTERNAL_SERVER_ERROR, message);
 	}
 }
