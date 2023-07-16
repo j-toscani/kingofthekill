@@ -1,5 +1,4 @@
-import ConnectWs from '@/components/ConnectWs.client';
-import { GameScreen } from '@/components/GameScreen';
+import { GameScreen } from '@/components/GameScreen.client';
 import Link from 'next/link';
 
 export default function Game() {

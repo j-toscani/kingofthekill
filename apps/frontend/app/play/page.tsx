@@ -1,4 +1,4 @@
-import ConnectWs from "@/components/ConnectWs.client";
+import HandleWs from "@/components/HandleWs.client";
 import Link from 'next/link'
 
 export default function Home() {
@@ -8,7 +8,7 @@ export default function Home() {
         You are logged in!
       </h1>
       <div>
-        <ConnectWs />
+        <HandleWs />
       </div>
       <div>
         <Link href="/play/game"> To The Game!</Link>
