@@ -3,6 +3,12 @@ import { IncomingMessage } from 'http';
 import { Socket } from 'net';
 import { UnauthorizedError } from '../errors/ApiErrors.js';
 
+declare module 'fastify' {
+	interface FastifyInstance {
+		wss: WebSocketServer;
+	}
+}
+
 export function createHandleUpgrade(
 	wss: WebSocketServer,
     authenticate: (req: IncomingMessage) => Promise<any> 

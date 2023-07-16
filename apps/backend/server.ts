@@ -4,7 +4,7 @@ import { PROCESS_EXIT_CODE } from './constants.js';
 import { routes } from './plugins/router/index.js';
 import { pluginWss } from './plugins/websocket/wss.js';
 
-const PORT = 3000;
+const PORT = 3001;
 
 const fastify = Fastify({
 	logger: true,

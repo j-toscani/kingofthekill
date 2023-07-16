@@ -2,8 +2,8 @@
     "compilerOptions": {
         "module": "esnext",
         "target": "esnext",
-        "moduleResolution": "NodeNext"
+        "moduleResolution": "Node",
+        "declaration": true
     },
-    "include": ["./**/*.ts"],
     "exclude": ["node_modules"]
 }
