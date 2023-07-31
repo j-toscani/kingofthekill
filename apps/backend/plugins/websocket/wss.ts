@@ -1,25 +1,25 @@
-import { WebSocketServer, WebSocket, RawData } from 'ws';
+import { WebSocketServer, WebSocket } from 'ws';
 import { IncomingMessage } from 'http';
-import { parseRawData } from './parseRawData.js';
 import fp from 'fastify-plugin';
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
-import { eventSchema } from './schemas.js';
-import { joinRoom, leaveRoom } from './rooms.js';
+import { User } from '../../types/index.js';
+import { handleMessageFactory } from './messages/handleMessageFactory.js';
 
 const wss = new WebSocketServer({ noServer: true });
-const events = {
-	join: joinRoom,
-	leave: leaveRoom,
-};
 
 function addWss(
 	fastify: FastifyInstance,
 	_options: FastifyPluginOptions,
 	done: (err?: Error) => void,
 ) {
-	wss.on('connection', (ws: WebSocket, _request: IncomingMessage, _client) => {
-		ws.on('error', (e) => done(e));
-		ws.on('message', handleMessage(ws, fastify));
+	wss.on('connection', (ws: WebSocket, _request: IncomingMessage, user: User) => {
+		const handleMessage = handleMessageFactory({ ws, fastify, user });
+		const handleError = (e: Error) => {
+			ws.send(JSON.stringify({ event: 'error', message: e.message }));
+			done(e);
+		};
+		ws.on('error', handleError);
+		ws.on('message', handleMessage);
 	});
 
 	fastify.decorate('wss', wss);
@@ -27,24 +27,3 @@ function addWss(
 }
 
 export const pluginWss = fp(addWss);
-
-function handleMessage(_ws: WebSocket, fastify: FastifyInstance) {
-	return (rawData: RawData) => {
-		try {
-			const parsed = parseRawData(rawData);
-			const validated = eventSchema.parse(parsed);
-
-			if (!validated?.data.id) throw new Error('No id was provided.');
-			const { data } = validated;
-
-			if (validated.event in events && data.id) {
-				const rooms = events[validated.event](data.id);
-				fastify.log.info(`People in room: ${rooms.room.size}`)
-			} else {
-				fastify.log.warn(`Unknown event: ${validated.event}`);
-			}
-		} catch (error) {
-			fastify.log.error(error);
-		}
-	};
-}
