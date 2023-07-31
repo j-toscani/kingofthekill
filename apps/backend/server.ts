@@ -11,9 +11,8 @@ const fastify = Fastify({
 });
 
 fastify.setErrorHandler(errorHandler);
-fastify.register(pluginWss)
-fastify.register(routes)
-
+fastify.register(pluginWss);
+fastify.register(routes);
 
 try {
 	await fastify.listen({ port: PORT });
