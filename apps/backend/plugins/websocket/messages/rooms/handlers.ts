@@ -1,19 +1,17 @@
-import { Factory, User } from '../../../../types';
+import { WebSocket } from 'ws';
+import { Factory, Room, Rooms, User } from '@/types';
 
-type Room = Set<string>;
-export type Rooms = Map<string, Room>;
-
-export type RoomHandlerFactory = Factory<
+export type RoomHandlerFactory<T = Rooms> = Factory<
 	{ getRooms: () => Rooms },
-	{ room: string },
-	Rooms,
+	{ room: string; ws: WebSocket },
+	T,
 	{ user: User }
 >;
 
 export const joinRoomFactory: RoomHandlerFactory =
 	({ getRooms }) =>
-	({ room }, { user }) => {
-		getRooms().get(room).add(user);
+	({ room, ws }, { user }) => {
+		getRooms().get(room).set(user, { user, ws });
 		return getRooms();
 	};
 
@@ -26,8 +24,8 @@ export const leaveRoomFactory: RoomHandlerFactory =
 
 export const createRoomFactory: RoomHandlerFactory =
 	({ getRooms }) =>
-	({ room }, { user }) => {
-		getRooms().set(room, new Set([user]));
+	({ room, ws }, { user }) => {
+		getRooms().set(room, new Map([[user, { user, ws }]]));
 		return getRooms();
 	};
 
@@ -36,4 +34,10 @@ export const removeRoomFactory: RoomHandlerFactory =
 	({ room }) => {
 		getRooms().delete(room);
 		return getRooms();
+	};
+
+export const getRoomFactory: RoomHandlerFactory<Room> =
+	({ getRooms }) =>
+	({ room }) => {
+		return getRooms().get(room);
 	};
