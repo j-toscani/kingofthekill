@@ -1,5 +1,6 @@
 import { WebSocket } from 'ws';
-import { Factory, Room, Rooms, User } from '@/types';
+import { Factory, Room, Rooms, User } from '../../../../types';
+
 
 export type RoomHandlerFactory<T = Rooms> = Factory<
 	{ getRooms: () => Rooms },

@@ -4,10 +4,6 @@
 		"target": "esnext",
 		"moduleResolution": "Node",
 		"declaration": true,
-		"paths": {
-			"@/*": ["./*"],
-			"@plugins/*": ["./plugins/*"]
-		}
 	},
 	"exclude": ["node_modules"]
 }
