@@ -10,7 +10,7 @@ declare module 'fastify' {
 	}
 }
 
-export function createHandleUpgrade({
+export function handleUpgradeFactory({
 	wss,
 	getUser,
 }: {
