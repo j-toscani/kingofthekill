@@ -1,7 +1,7 @@
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
-import { createHandleUpgrade } from '../websocket/handleUpgradeFactory.js';
-import { NotFoundError } from '../errors/ApiErrors.js';
-import { getUser } from '../websocket/getUser.js';
+import { createHandleUpgrade } from '@plugins/websocket/handleUpgradeFactory.js';
+import { NotFoundError } from '@plugins/errors/ApiErrors.js';
+import { getUser } from '@plugins/websocket/getUser.js';
 
 export function routes(fastify: FastifyInstance, _options: FastifyPluginOptions, done: () => void) {
 	const handleUpgrade = createHandleUpgrade({ wss: fastify.wss, getUser });
