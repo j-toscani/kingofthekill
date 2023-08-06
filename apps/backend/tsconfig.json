@@ -1,9 +1,13 @@
 {
-    "compilerOptions": {
-        "module": "esnext",
-        "target": "esnext",
-        "moduleResolution": "Node",
-        "declaration": true
-    },
-    "exclude": ["node_modules"]
+	"compilerOptions": {
+		"module": "esnext",
+		"target": "esnext",
+		"moduleResolution": "Node",
+		"declaration": true,
+		"paths": {
+			"@/*": ["./*"],
+			"@plugins/*": ["./plugins/*"]
+		}
+	},
+	"exclude": ["node_modules"]
 }
