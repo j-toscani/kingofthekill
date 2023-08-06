@@ -12,7 +12,7 @@ type HandleMessageFactory = Factory<
 >;
 
 export const handleMessageFactory: HandleMessageFactory =
-	({ fastify, user }) =>
+	({ ws, fastify, user }) =>
 	(rawData: RawData) => {
 		const parsedData = parseRawData(rawData);
 		const { event, data } = eventSchema.parse(parsedData);
@@ -20,7 +20,7 @@ export const handleMessageFactory: HandleMessageFactory =
 		if (!data) throw new Error('No data was provided.');
 
 		if (isRoomEvent(event) && data.room) {
-			const rooms = roomEvents[event]({ room: data.room }, { user });
+			const rooms = roomEvents[event]({ room: data.room, ws }, { user });
 			fastify.log.info(`People in room: ${rooms.get(data.room).size}`);
 		} else {
 			fastify.log.warn(`Unknown event: ${event}`);
