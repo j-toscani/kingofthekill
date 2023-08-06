@@ -1,5 +1,6 @@
-import { IncomingMessage } from "http";
+import { IncomingMessage } from 'http';
+import { getCookies } from '../../utils/getCookies';
 
 export function getUser(request: IncomingMessage) {
-	return request.headers.authorization;
+	return getCookies(request)['auth'];
 }

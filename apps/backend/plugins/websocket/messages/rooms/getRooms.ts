@@ -1,4 +1,4 @@
-import { Rooms } from "./handlers";
+import { Rooms } from "../../../../types";
 
 const rooms: Rooms = new Map();
 

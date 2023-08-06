@@ -11,7 +11,7 @@ const LoginForm: FC = () => {
 		'use server';
 
 		if (data.get('password') && data.get('email')) {
-			cookies().set('token', 'some-token');
+			cookies().set('token', 'auth');
 			redirect('http://localhost:3000/play');
 		}
 	}
