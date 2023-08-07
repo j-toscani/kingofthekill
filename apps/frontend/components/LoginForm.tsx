@@ -3,7 +3,7 @@ import { FC } from 'react';
 import { redirect } from 'next/navigation';
 
 const LoginForm: FC = () => {
-	const token = cookies().get('token');
+	const token = cookies().get('auth');
 	if (token) {
 		redirect('http://localhost:3000/play');
 	}
@@ -11,7 +11,7 @@ const LoginForm: FC = () => {
 		'use server';
 
 		if (data.get('password') && data.get('email')) {
-			cookies().set('token', 'auth');
+			cookies().set('auth', 'token');
 			redirect('http://localhost:3000/play');
 		}
 	}

@@ -1,12 +1,17 @@
 'use client';
 
 import useRooms from '@/utils/useRooms';
-import { ChangeEvent, useRef, useState } from 'react';
+import { ChangeEvent, useEffect, useRef, useState } from 'react';
 
 export default function ConnectWs() {
 	const [value, setValue] = useState('');
+	const [rooms, setRooms] = useState<string[]>([]);
 	const wsRef = useRef<null | WebSocket>(null);
-	const { joinRoom, leaveRoom } = useRooms(wsRef)
+	const { joinRoom, leaveRoom, createRoom } = useRooms(wsRef);
+
+	useEffect(() => {
+		fetchRooms().catch(console.error)
+	}, []);
 
 	function setWsRef() {
 		if (wsRef.current) return;
@@ -17,25 +22,36 @@ export default function ConnectWs() {
 		wsRef.current.onclose = leaveRoom;
 	}
 
+	async function fetchRooms() {
+		const response = await fetch('http://localhost:3001/rooms');
+		if (!response.ok) {
+			throw new Error('Response not OK!');
+		}
+		const roomIds = await response.json();
+		setRooms(Array.isArray(roomIds) ? roomIds : []);
+	}
+
 	function handleChange(e: ChangeEvent<HTMLInputElement>) {
 		setValue(e.target.value);
 	}
-	function sendMessage() {
-		if (!wsRef.current) return;
-		wsRef.current.send(value);
+	function handleCreateRoom() {
+		createRoom(value);
 	}
 	return (
 		<div>
 			<button onClick={setWsRef}> Connect to Websocket </button>
 			<div>
 				<input type="text" onChange={handleChange} value={value} />
-				<button onClick={sendMessage}> send </button>
+				<button onClick={handleCreateRoom}> send </button>
 				<button onClick={() => setValue('')}>clear</button>
 			</div>
 			<div>
 				<button onClick={joinRoom}>Join Room</button>
 				<button onClick={leaveRoom}>Leave Room</button>
 			</div>
+			{rooms.map((room) => (
+				<span key={room}>{room}</span>
+			))}
 		</div>
 	);
 }
