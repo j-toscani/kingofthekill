@@ -13,7 +13,7 @@ export function routes(fastify: FastifyInstance, _options: FastifyPluginOptions,
 	});
 
 	fastify.get('/rooms', (_request, _reply) => {
-		return getRooms();
+		return Array.from(getRooms().keys());
 	});
 
 	fastify.get('/error', () => {

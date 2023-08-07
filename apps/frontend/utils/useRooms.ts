@@ -7,18 +7,17 @@ export default function useRooms(wsRef: RefObject<WebSocket>) {
 	function joinRoom() {
 		if (!wsRef.current) return;
 
-		const storedId = storage.get('id');
-		const id = storedId ?? crypto.randomUUID();
+		const id = storage.get('id');
 
-		if (!storedId) {
-			storage.set('id', id);
+		if (!id) {
+			throw new Error('No ID in storage. Cannot join Room.')
 		}
 
 		const ws = wsRef.current;
 		const data = {
 			event: 'join',
 			data: {
-				id,
+				room: id,
 			},
 		};
 		ws.send(JSON.stringify(data));
@@ -37,7 +36,7 @@ export default function useRooms(wsRef: RefObject<WebSocket>) {
 		const data = {
 			event: 'leave',
 			data: {
-				id,
+				room: id,
 			},
 		};
 
@@ -45,8 +44,24 @@ export default function useRooms(wsRef: RefObject<WebSocket>) {
 		storage.remove('id');
 	}
 
+	function createRoom(id: string) {
+		if (!wsRef.current) return;
+
+		storage.set('id', id);
+		const ws = wsRef.current;
+		const data = {
+			event: 'create',
+			data: {
+				room: id
+			}
+		}
+
+		ws.send(JSON.stringify(data));
+	}
+
     return {
         joinRoom,
-        leaveRoom
+        leaveRoom,
+		createRoom
     }
 }
