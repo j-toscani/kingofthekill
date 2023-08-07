@@ -1,4 +1,6 @@
 import Fastify from 'fastify';
+import cors from '@fastify/cors'
+
 import { errorHandler } from './plugins/errors/errorHandler.js';
 import { PROCESS_EXIT_CODE } from './constants.js';
 import { routes } from './plugins/router/index.js';
@@ -9,7 +11,7 @@ const PORT = 3001;
 const fastify = Fastify({
 	logger: true,
 });
-
+fastify.register(cors, { origin: '*' })
 fastify.setErrorHandler(errorHandler);
 fastify.register(pluginWss);
 fastify.register(routes);
