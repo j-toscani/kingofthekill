@@ -1,7 +1,6 @@
 import { WebSocket } from 'ws';
 import { Factory, Room, Rooms, User } from '../../../../types';
 
-
 export type RoomHandlerFactory<T = Rooms> = Factory<
 	{ getRooms: () => Rooms },
 	{ room: string; ws: WebSocket },
@@ -18,8 +17,15 @@ export const joinRoomFactory: RoomHandlerFactory =
 
 export const leaveRoomFactory: RoomHandlerFactory =
 	({ getRooms }) =>
-	({ room }, { user }) => {
-		getRooms().get(room).delete(user);
+	({ room: roomId }, { user }) => {
+		const room = getRooms().get(roomId);
+
+		room.delete(user);
+
+		if (!room.size) {
+			getRooms().delete(roomId);
+		}
+
 		return getRooms();
 	};
 
