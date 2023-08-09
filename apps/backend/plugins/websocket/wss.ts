@@ -4,6 +4,7 @@ import fp from 'fastify-plugin';
 import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { User } from '../../types/index.js';
 import { handleMessageFactory } from './messages/handleMessageFactory.js';
+import { checkConnections } from './connections/index.js';
 
 const wss = new WebSocketServer({ noServer: true });
 
@@ -12,6 +13,8 @@ function addWss(
 	_options: FastifyPluginOptions,
 	done: (err?: Error) => void,
 ) {
+	checkConnections({ wss, fastify });
+
 	wss.on('connection', (ws: WebSocket, _request: IncomingMessage, user: User) => {
 		const handleMessage = handleMessageFactory({ ws, fastify, user });
 		const handleError = (e: Error) => {
