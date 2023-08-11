@@ -24,15 +24,23 @@ export const checkConnection = checkConnectionFactory({
 	leaveRoom: leaveRoomFactory({ getRooms }),
 });
 
-export function checkConnections({ wss, fastify }: { wss: WebSocketServer, fastify: FastifyInstance }) {
+export function checkConnections({
+	wss,
+	fastify,
+}: {
+	wss: WebSocketServer;
+	fastify: FastifyInstance;
+}) {
 	const interval = setInterval(() => {
-		wss.clients.forEach((client) => checkConnection({ ws: client }, { fastify }));
+		wss.clients.forEach((client) =>
+			checkConnection({ ws: Object.assign(client, { broadcast: undefined }) }, { fastify }),
+		);
 	}, PING_PONG_INTERVAL);
 
-    wss.on('connection', (ws: WebSocket) => {
-        addConnection({ ws }, {})
-        ws.on('ping', () => addConnection({ ws }, {}));
-    })
+	wss.on('connection', (ws: WebSocket) => {
+		addConnection({ ws }, {});
+		ws.on('ping', () => addConnection({ ws }, {}));
+	});
 
 	wss.on('close', () => clearInterval(interval));
 }
