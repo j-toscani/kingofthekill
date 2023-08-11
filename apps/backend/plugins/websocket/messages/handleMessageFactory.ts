@@ -3,7 +3,7 @@ import { RawData, WebSocket } from 'ws';
 import { Factory, User } from '../../../types';
 import { parseRawData } from '../parseRawData';
 import { eventSchema } from '../schemas';
-import { isRoomEvent, events as roomEvents } from './rooms';
+import { isRoomEvent, events as roomEvents } from '../rooms';
 
 type HandleMessageFactory = Factory<
 	{ ws: WebSocket; fastify: FastifyInstance; user: User },

@@ -1,7 +1,7 @@
 import { WebSocket, WebSocketServer } from 'ws';
-import { getRooms } from '../messages/rooms/getRooms';
-import { leaveRoomFactory } from '../messages/rooms/handlers';
-import { getConnections } from './getConnections';
+import { getRooms } from '../adapters/getRooms';
+import { leaveRoomFactory } from '../rooms/handlers';
+import { getConnections } from '../adapters/getConnections';
 import {
 	addConnectionFactory,
 	checkConnectionFactory,

@@ -1,5 +1,8 @@
 import { WebSocket } from 'ws';
-import { Factory, Room, Rooms, User } from '../../../../types';
+import { Factory, Room, Rooms, User } from '../../../types';
+import { BadRequestError } from '../../errors/ApiErrors';
+
+const MAX_USER_IN_ROOMS = 4;
 
 export type RoomHandlerFactory<T = Rooms> = Factory<
 	{ getRooms: () => Rooms },
@@ -10,14 +13,21 @@ export type RoomHandlerFactory<T = Rooms> = Factory<
 
 export const joinRoomFactory: RoomHandlerFactory =
 	({ getRooms }) =>
-	({ room, ws }, { user }) => {
-		getRooms().get(room).set(user, { user, ws });
+	({ room: roomId, ws }, { user }) => {
+		const room = getRooms().get(roomId);
+		if (room.size >= MAX_USER_IN_ROOMS) throw new BadRequestError('Room is already full.');
+
+		room.set(user, { ws, user });
+		ws.broadcast(
+			{ room: roomId, data: { event: 'joined', data: 'A User joined the Room.' }, ws },
+			{},
+		);
 		return getRooms();
 	};
 
 export const leaveRoomFactory: RoomHandlerFactory =
 	({ getRooms }) =>
-	({ room: roomId }, { user }) => {
+	({ room: roomId, ws }, { user }) => {
 		const room = getRooms().get(roomId);
 
 		room.delete(user);
@@ -26,6 +36,10 @@ export const leaveRoomFactory: RoomHandlerFactory =
 			getRooms().delete(roomId);
 		}
 
+		ws.broadcast(
+			{ room: roomId, data: { event: 'left', data: 'A User left the Room.' }, ws },
+			{},
+		);
 		return getRooms();
 	};
 
