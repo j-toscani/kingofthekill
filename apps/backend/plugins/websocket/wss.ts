@@ -5,6 +5,14 @@ import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { User } from '../../types/index.js';
 import { handleMessageFactory } from './messages/handleMessageFactory.js';
 import { checkConnections } from './connections/index.js';
+import { broadcastFactory } from './broadcast/handlers.js';
+import { broadcast } from './broadcast/index.js';
+
+declare module 'ws' {
+	interface WebSocket {
+		broadcast: ReturnType<typeof broadcastFactory> 
+	}
+}
 
 const wss = new WebSocketServer({ noServer: true });
 
@@ -16,6 +24,7 @@ function addWss(
 	checkConnections({ wss, fastify });
 
 	wss.on('connection', (ws: WebSocket, _request: IncomingMessage, user: User) => {
+		ws.broadcast = broadcast
 		const handleMessage = handleMessageFactory({ ws, fastify, user });
 		const handleError = (e: Error) => {
 			ws.send(JSON.stringify({ event: 'error', message: e.message }));
