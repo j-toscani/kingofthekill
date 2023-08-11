@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyPluginOptions } from 'fastify';
 import { handleUpgradeFactory } from '../websocket/handleUpgradeFactory.js';
 import { NotFoundError } from '../errors/ApiErrors.js';
 import { getUser } from '../websocket/getUser.js';
-import { getRooms } from '../websocket/messages/rooms/getRooms.js';
+import { getRooms } from '../websocket/adapters/getRooms.js';
 
 export function routes(fastify: FastifyInstance, _options: FastifyPluginOptions, done: () => void) {
 	const handleUpgrade = handleUpgradeFactory({ wss: fastify.wss, getUser });

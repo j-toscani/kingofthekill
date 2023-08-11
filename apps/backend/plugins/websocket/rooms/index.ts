@@ -1,4 +1,4 @@
-import { getRooms } from './getRooms';
+import { getRooms } from '../adapters/getRooms';
 import { RoomHandlerFactory, createRoomFactory, joinRoomFactory, leaveRoomFactory } from './handlers';
 
 const joinRoom = joinRoomFactory({ getRooms });
