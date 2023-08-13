@@ -18,7 +18,7 @@ export const joinRoomFactory: RoomHandlerFactory =
 		if (room.size >= MAX_USER_IN_ROOMS) throw new BadRequestError('Room is already full.');
 
 		room.set(user, { ws, user });
-		ws.broadcast(
+		ws.emitTo(
 			{ room: roomId, data: { event: 'joined', data: 'A User joined the Room.' }, ws },
 			{},
 		);
@@ -36,7 +36,7 @@ export const leaveRoomFactory: RoomHandlerFactory =
 			getRooms().delete(roomId);
 		}
 
-		ws.broadcast(
+		ws.emitTo(
 			{ room: roomId, data: { event: 'left', data: 'A User left the Room.' }, ws },
 			{},
 		);

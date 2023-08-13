@@ -56,7 +56,7 @@ export const checkConnectionFactory: Factory<
 	({ getConnection, hasConnection, removeConnection, leaveRoom }) =>
 	({ ws }, { fastify }) => {
 		if (!hasConnection({ ws }, {})) {
-			const { room, user } = getConnection({ ws }, {});
+			const { room, user } = getConnection({ ws }, {}) ?? {};
             if (room && !user) {
                 fastify.log.error(`Connection found with room ${room} without user.`)
             }
