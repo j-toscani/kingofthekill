@@ -1,11 +1,11 @@
 import { RefObject } from 'react';
 import useStorage from './useStorage';
 
-export default function useRooms(wsRef: RefObject<WebSocket>) {
+export default function useRooms(ws: WebSocket | null) {
 	const storage = useStorage();
 
 	function joinRoom() {
-		if (!wsRef.current) return;
+		if (!ws) return;
 
 		const id = storage.get('id');
 
@@ -13,7 +13,6 @@ export default function useRooms(wsRef: RefObject<WebSocket>) {
 			throw new Error('No ID in storage. Cannot join Room.')
 		}
 
-		const ws = wsRef.current;
 		const data = {
 			event: 'join',
 			data: {
@@ -24,7 +23,7 @@ export default function useRooms(wsRef: RefObject<WebSocket>) {
 	}
 
 	function leaveRoom() {
-		if (!wsRef.current) return;
+		if (!ws) return;
 
 		const id = storage.get('id');
 
@@ -32,7 +31,6 @@ export default function useRooms(wsRef: RefObject<WebSocket>) {
 			throw new Error('User id missing! Cannot disconnect.');
 		}
 
-		const ws = wsRef.current;
 		const data = {
 			event: 'leave',
 			data: {
@@ -45,10 +43,9 @@ export default function useRooms(wsRef: RefObject<WebSocket>) {
 	}
 
 	function createRoom(id: string) {
-		if (!wsRef.current) return;
+		if (!ws) return;
 
 		storage.set('id', id);
-		const ws = wsRef.current;
 		const data = {
 			event: 'create',
 			data: {
