@@ -4,7 +4,7 @@ import { BadRequestError } from '../../errors/ApiErrors';
 
 const MAX_USER_IN_ROOMS = 4;
 
-export type RoomHandlerFactory<T = Rooms> = Factory<
+export type RoomHandlerFactory<T = void> = Factory<
 	{ getRooms: () => Rooms },
 	{ room: string; ws: WebSocket },
 	T,
@@ -15,6 +15,7 @@ export const joinRoomFactory: RoomHandlerFactory =
 	({ getRooms }) =>
 	({ room: roomId, ws }, { user }) => {
 		const room = getRooms().get(roomId);
+		if (!room) throw new BadRequestError('Room does not exist.');
 		if (room.size >= MAX_USER_IN_ROOMS) throw new BadRequestError('Room is already full.');
 
 		room.set(user, { ws, user });
@@ -22,13 +23,14 @@ export const joinRoomFactory: RoomHandlerFactory =
 			{ room: roomId, data: { event: 'joined', data: 'A User joined the Room.' }, ws },
 			{},
 		);
-		return getRooms();
+		ws.send(JSON.stringify({ event: 'joined' }));
 	};
 
 export const leaveRoomFactory: RoomHandlerFactory =
 	({ getRooms }) =>
 	({ room: roomId, ws }, { user }) => {
 		const room = getRooms().get(roomId);
+		if (!room) throw new BadRequestError('Room does not exist.');
 
 		room.delete(user);
 
@@ -36,10 +38,7 @@ export const leaveRoomFactory: RoomHandlerFactory =
 			getRooms().delete(roomId);
 		}
 
-		ws.emitTo(
-			{ room: roomId, data: { event: 'left', data: 'A User left the Room.' }, ws },
-			{},
-		);
+		ws.emitTo({ room: roomId, data: { event: 'left', data: 'A User left the Room.' }, ws }, {});
 		return getRooms();
 	};
 
@@ -60,5 +59,7 @@ export const removeRoomFactory: RoomHandlerFactory =
 export const getRoomFactory: RoomHandlerFactory<Room> =
 	({ getRooms }) =>
 	({ room }) => {
-		return getRooms().get(room);
+		const gotRoom = getRooms().get(room);
+		if (!gotRoom) throw new BadRequestError('Room does not exist.');
+		return gotRoom
 	};

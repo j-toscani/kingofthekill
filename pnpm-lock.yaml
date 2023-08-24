@@ -8,7 +8,7 @@ importers:
 
   .: {}
 
-  apps/backend:
+  backend:
     dependencies:
       '@fastify/cors':
         specifier: ^8.3.0
@@ -22,6 +22,9 @@ importers:
       fastify-plugin:
         specifier: ^4.5.0
         version: 4.5.0
+      shared:
+        specifier: workspace:*
+        version: link:../packages/shared
       ws:
         specifier: ^8.13.0
         version: 8.13.0
@@ -60,7 +63,7 @@ importers:
         specifier: 5.1.6
         version: 5.1.6
 
-  apps/frontend:
+  frontend:
     dependencies:
       '@types/node':
         specifier: 20.4.0
@@ -108,6 +111,12 @@ importers:
       prettier:
         specifier: ^3.0.0
         version: 3.0.0
+
+  packages/shared:
+    dependencies:
+      typescript:
+        specifier: 5.1.6
+        version: 5.1.6
 
 packages:
 

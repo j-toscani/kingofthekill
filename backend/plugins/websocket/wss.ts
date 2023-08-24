@@ -10,8 +10,8 @@ import { broadcast, broadcastTo, emit, emitTo } from './broadcast/index.js';
 
 declare module 'ws' {
 	interface WebSocket {
-		broadcast: ReturnType<typeof broadcastFactory>;
-		emit: ReturnType<typeof broadcastFactory>;
+		broadcastAll: ReturnType<typeof broadcastFactory>;
+		emitAll: ReturnType<typeof broadcastFactory>;
 		broadcastTo: ReturnType<typeof broadcastToFactory>;
 		emitTo: ReturnType<typeof broadcastToFactory>;
 	}
@@ -27,9 +27,9 @@ function addWss(
 	checkConnections({ wss, fastify });
 
 	wss.on('connection', (ws: WebSocket, _request: IncomingMessage, user: User) => {
-		ws.broadcast = broadcast;
+		ws.broadcastAll = broadcast;
 		ws.broadcastTo = broadcastTo;
-		ws.emit = emit;
+		ws.emitAll = emit;
 		ws.emitTo = emitTo;
 
 		const handleMessage = handleMessageFactory({ ws, fastify, user });
